@@ -560,6 +560,7 @@ void writeImpl() {
         buffer = new char[size];
        //BEGIN HINTS
        //Fetch data from the user space to this system buffer using  userReadWrite().
+       userReadWrite(writeAddr, buffer, size, USER_WRITE);
        //END HINTS
         
         
@@ -569,7 +570,9 @@ void writeImpl() {
         }
         //BEGIN HINTS 
         //Use openFileManager->getFile method  to find the openned file structure (SysOpenFile)
+        SysOpenFile* currSysFile = openFileManager->getFile(fileID);
         //Use SysOpenFile->file's writeAt() to write out the above buffer with size listed.
+        currSysFile->file->writeAt(buffer, size, 0);
         //Increment the current offset  by the actual number of bytes written.
         //END HINTS 
        // See useropenfile.h and pcb.cc on UserOpenFile class and its methods.
