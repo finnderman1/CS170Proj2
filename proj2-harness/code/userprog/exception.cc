@@ -201,7 +201,7 @@ int forkImpl() {
   
     // BEGIN HINTS
     // Make a copy of the address space using AddrSpace::AddrSpace()
-    AddrSpace* currAddrSpace = AddrSpace(currentThread->space, newpcb);
+    AddrSpace* currAddrSpace = new AddrSpace(currentThread->space, newpcb);
     // END HINTS
 
 
@@ -573,7 +573,7 @@ void writeImpl() {
         //Use openFileManager->getFile method  to find the openned file structure (SysOpenFile)
         SysOpenFile* currSysFile = openFileManager->getFile(fileID);
         //Use SysOpenFile->file's writeAt() to write out the above buffer with size listed.
-        currSysFile->file->writeAt(buffer, size, 0);
+        currSysFile->file->WriteAt(buffer, size, 0);
         //Increment the current offset  by the actual number of bytes written.
         //END HINTS 
        // See useropenfile.h and pcb.cc on UserOpenFile class and its methods.
