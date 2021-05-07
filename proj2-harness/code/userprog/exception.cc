@@ -177,6 +177,7 @@ int forkImpl() {
 
     // Use processManager to get a new PID. 
     newPID = processManager->getPID();
+    fprintf(stderr, "newPID = %d", newPID);
 
     // Construct new PCB. See pcb.cc on how to create a new PCB.
     PCB* newpcb = new PCB(newPID, currPID);
