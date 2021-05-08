@@ -320,8 +320,7 @@ int joinImpl() {
 
    // BEGIN HINTS 
    // If the other process has  already exited, then just return its status
-   if(processManager->getStatus(otherPID) == P_BAD)
-   {
+   if(processManager->getStatus(otherPID) == 1) {
        return processManager->getStatus(otherPID);
    }
    // Use proessManager to wait for the completion of  otherPID.
