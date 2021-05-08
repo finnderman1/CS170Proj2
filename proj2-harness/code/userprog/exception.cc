@@ -578,9 +578,9 @@ void writeImpl() {
         //Use openFileManager->getFile method  to find the openned file structure (SysOpenFile)
         SysOpenFile* currSysFile = openFileManager->getFile(fileID);
         //Use SysOpenFile->file's writeAt() to write out the above buffer with size listed.
-        currSysFile->file->WriteAt(buffer, size, 0);
+        int writeSize = currSysFile->file->WriteAt(buffer, size, userFile->currOffsetInFile);
         //Increment the current offset  by the actual number of bytes written.
-        userFile->currOffsetInFile = userFile->currOffsetInFile + size;
+        userFile->currOffsetInFile = userFile->currOffsetInFile + writeSize;
         //END HINTS 
        // See useropenfile.h and pcb.cc on UserOpenFile class and its methods.
        // See sysopenfile.h and openfilemanager.cc for SysOpenFile class and its methods.
@@ -623,9 +623,9 @@ int readImpl() {
         //Now from openFileManger, find the SystemOpenFile data structure for this userFile.
         SysOpenFile* currSysFile = openFileManager->getFile(fileID);
         //Use ReadAt() to read the file at selected offset to this system buffer buffer[]
-        currSysFile->file->ReadAt(buffer, size, 0);
+        int readSize = currSysFile->file->ReadAt(buffer, size, userFile->currOffsetInFile);
         // Adust the offset in userFile to reflect my current position.
-        userFile->currOffsetInFile = userFile->currOffsetInFile + size;
+        userFile->currOffsetInFile = userFile->currOffsetInFile + readSize;
         // The above few lines of code are very similar to ones in writeImpl()
         // END HINTS 
         // See useropenfile.h and pcb.cc on UserOpenFile class and its methods.
