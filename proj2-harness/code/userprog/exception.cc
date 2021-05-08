@@ -258,10 +258,15 @@ void yieldImpl() {
 
     //BEGIN HINTS
     //Save the corresponding user process's register states.
+    currentThread->space->SaveState();
+    currentThread->SaveUserState();
     //This kernel thread yields using currentThread->Yield() to accomplish the context switch
+    currentThread->Yield();
     //Once  this process is resumed for exectuion after yielding,
     //restore the corresponding user process's states (registers using Thread::RestoreUserState() 
+    currentThread->RestoreUserState();
     //and page table using AddrSpace::RestoreState()).
+    currentThread->space->RestoreState();
     //See addrspace.cc and thread.cc on how to save and restore states.
     //END HINTS
     
