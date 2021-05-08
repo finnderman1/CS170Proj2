@@ -258,6 +258,7 @@ void yieldImpl() {
 
     //BEGIN HINTS
     //Save the corresponding user process's register states.
+     IntStatus oldLevel = interrupt->SetLevel(IntOff);
     currentThread->space->SaveState();
     currentThread->SaveUserState();
     //This kernel thread yields using currentThread->Yield() to accomplish the context switch
@@ -268,11 +269,8 @@ void yieldImpl() {
     //and page table using AddrSpace::RestoreState()).
     currentThread->space->RestoreState();
     //See addrspace.cc and thread.cc on how to save and restore states.
+    (void) interrupt->SetLevel(oldLevel);
     //END HINTS
-    
-   
-  
- 
 
 
 }
@@ -321,7 +319,7 @@ int joinImpl() {
 
    // BEGIN HINTS 
    // If the other process has  already exited, then just return its status
-   if(processManager->getStatus(otherPID) == 1) {
+   if(processManager->getStatus(otherPID) < 0) {
        return processManager->getStatus(otherPID);
    }
    // Use proessManager to wait for the completion of  otherPID.
@@ -330,11 +328,6 @@ int joinImpl() {
    currentThread->space->getPCB()->status = P_RUNNING;
    // END HINTS
    //
-    
-   
-  
- 
-
 
     return processManager->getStatus(otherPID);
 }
