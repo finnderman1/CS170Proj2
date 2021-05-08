@@ -577,12 +577,7 @@ void writeImpl() {
         userFile->currOffsetInFile = userFile->currOffsetInFile + writeSize;
         //END HINTS 
        // See useropenfile.h and pcb.cc on UserOpenFile class and its methods.
-       // See sysopenfile.h and openfilemanager.cc for SysOpenFile class and its methods.
-    
-
-
-    
-        
+       // See sysopenfile.h and openfilemanager.cc for SysOpenFile class and its methods.        
     }
     delete [] buffer;
 }
@@ -625,11 +620,6 @@ int readImpl() {
         // See useropenfile.h and pcb.cc on UserOpenFile class and its methods.
         // See sysopenfile.h and openfilemanager.cc for SysOpenFile class and its methods.
  
-        
-       
-      
-     
-    
     }
     //BEGIN HINTS
     //Now copy data from the system buffer to the targted main memory space using userReadWrite()
@@ -661,11 +651,7 @@ void closeImpl() {
        // END HINTS
        // See useropenfile.h and pcb.cc on UserOpenFile class and its methods.
        // See sysopenfile.h and openfilemanager.cc for SysOpenFile class and its methods.
-
-       
-        
-       
-      
+    
     }
 }
 
