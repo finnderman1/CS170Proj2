@@ -292,8 +292,9 @@ void exitImpl() {
 
     //BEGIN HINTS 
     //Set the exit status in the PCB of this process using  currentThread->space->getPCB() 
-    currentThread->space->getPCB()->status = P_BAD;
-    //Also let other processes  know this process  exits through  processManager. 
+    currentThread->space->getPCB()->status = status;
+    //Also let other processes  know this process  exits through  processManager.
+    processManager->broadcast(currPID); 
     //See pcb.cc on how to get the exit code and see processmanager.cc on the above notification.
     //END HINTS
 
