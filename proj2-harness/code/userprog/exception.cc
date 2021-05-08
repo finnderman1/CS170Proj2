@@ -177,20 +177,14 @@ int forkImpl() {
 
     // Use processManager to get a new PID. 
     newPID = processManager->getPID();
-    fprintf(stderr, "newPid = %d, currPID = %d \n", newPID, currPID);
     // Construct new PCB. See pcb.cc on how to create a new PCB.
     PCB* newpcb = new PCB(newPID, currPID);
-    fprintf(stderr, "test = %d, \n", 1);
     // Set the new  process as P_RUNNING 
     newpcb->status = P_RUNNING;
-    fprintf(stderr, "test = %d, \n", 2);
     // Associate the new user process with this childThread
     newpcb->process = childThread;
-    fprintf(stderr, "test = %d, \n", 3);
     // Add this newly created process to processManager using addProcess.
-    processManager->addProcess(newpcb, 4);
     // END  HINTS
-    fprintf(stderr, "test = %d, \n", 5);
     if (newPID == -1) {
           fprintf(stderr, "Process %d is unable to fork a new process\n", currPID);
           return -1;
@@ -202,7 +196,6 @@ int forkImpl() {
     // Make a copy of the address space using AddrSpace::AddrSpace()
     childThread->space = new AddrSpace(currentThread->space, newpcb);
     // END HINTS
-    fprintf(stderr, "test = %d, \n", 6);
 
     int childNumPages = childThread->space->getNumPages();
     if (childThread->space->pageTable == NULL) {
@@ -210,12 +203,10 @@ int forkImpl() {
                " memory failed\n", currPID, newProcessPC, childNumPages);
         return -1;
     }
-    fprintf(stderr, "test = %d, \n", 7);
     // BEGIN HINTS
     // Save states of the new created process using SaveState.
     childThread->space->SaveState();
     // Save states/registers of the corresponding childThread for context switch.
-    fprintf(stderr, "test = %d, \n", 8);
     childThread->SaveUserState();
     // See addrspace.cc and thread.cc on how to save the states.
     // END HINTS
