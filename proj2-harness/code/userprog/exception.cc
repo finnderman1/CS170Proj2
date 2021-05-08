@@ -576,7 +576,7 @@ void writeImpl() {
         }
         //BEGIN HINTS 
         //Use openFileManager->getFile method  to find the openned file structure (SysOpenFile)
-        SysOpenFile* currSysFile = openFileManager->getFile(fileID);
+        SysOpenFile* currSysFile = openFileManager->getFile(userFile->indexInSysOpenFileList);
         //Use SysOpenFile->file's writeAt() to write out the above buffer with size listed.
         int writeSize = currSysFile->file->WriteAt(buffer, size, userFile->currOffsetInFile);
         //Increment the current offset  by the actual number of bytes written.
@@ -599,7 +599,7 @@ void writeImpl() {
 
 int readImpl() {
 
-    //int readAddr = machine->ReadRegister(4);
+    int readAddr = machine->ReadRegister(4);
     int size = machine->ReadRegister(5);
     int fileID = machine->ReadRegister(6);
     char* buffer = new char[size + 1];
@@ -621,11 +621,11 @@ int readImpl() {
 
         //BEGIN HINTS
         //Now from openFileManger, find the SystemOpenFile data structure for this userFile.
-        SysOpenFile* currSysFile = openFileManager->getFile(fileID);
+        SysOpenFile* currSysFile = openFileManager->getFile(userFile->indexInSysOpenFileList);
         //Use ReadAt() to read the file at selected offset to this system buffer buffer[]
-        int readSize = currSysFile->file->ReadAt(buffer, size, userFile->currOffsetInFile);
+        numActualBytesRead = currSysFile->file->ReadAt(buffer, size, userFile->currOffsetInFile);
         // Adust the offset in userFile to reflect my current position.
-        userFile->currOffsetInFile = userFile->currOffsetInFile + readSize;
+        userFile->currOffsetInFile = userFile->currOffsetInFile + numActualBytesRead;
         // The above few lines of code are very similar to ones in writeImpl()
         // END HINTS 
         // See useropenfile.h and pcb.cc on UserOpenFile class and its methods.
@@ -639,6 +639,7 @@ int readImpl() {
     }
     //BEGIN HINTS
     //Now copy data from the system buffer to the targted main memory space using userReadWrite()
+    userReadWrite(readAddr, buffer, numActualBytesRead, USER_READ)
     //END HINTS
     
     delete [] buffer;
