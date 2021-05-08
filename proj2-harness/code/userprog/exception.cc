@@ -639,7 +639,7 @@ int readImpl() {
     }
     //BEGIN HINTS
     //Now copy data from the system buffer to the targted main memory space using userReadWrite()
-    userReadWrite(readAddr, buffer, numActualBytesRead, USER_READ)
+    userReadWrite(readAddr, buffer, numActualBytesRead, USER_READ);
     //END HINTS
     
     delete [] buffer;
