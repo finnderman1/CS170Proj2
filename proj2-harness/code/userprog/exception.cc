@@ -200,7 +200,7 @@ int forkImpl() {
   
     // BEGIN HINTS
     // Make a copy of the address space using AddrSpace::AddrSpace()
-    AddrSpace* currAddrSpace = new AddrSpace(currentThread->space, newpcb);
+    childThread->space = new AddrSpace(currentThread->space, newpcb);
     // END HINTS
     fprintf(stderr, "test = %d, \n", 6);
 
@@ -213,7 +213,7 @@ int forkImpl() {
     fprintf(stderr, "test = %d, \n", 7);
     // BEGIN HINTS
     // Save states of the new created process using SaveState.
-    currAddrSpace->SaveState();
+    childThread->space->SaveState();
     // Save states/registers of the corresponding childThread for context switch.
     fprintf(stderr, "test = %d, \n", 8);
     childThread->SaveUserState();
