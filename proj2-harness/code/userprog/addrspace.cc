@@ -146,7 +146,6 @@ AddrSpace::AddrSpace(OpenFile *executable, PCB* newpcb)
 AddrSpace::AddrSpace(const AddrSpace* other, PCB* newpcb) {
     
     ASSERT(other->numPages <= NumPhysPages);
-
     // Copy all page table entries over, create associated PCB
     numPages = other->numPages;
     memoryManager->lock->Acquire();
@@ -166,6 +165,15 @@ AddrSpace::AddrSpace(const AddrSpace* other, PCB* newpcb) {
         //See memoryManager.cc on how to allocate memory pages.
         //Also (other->pageTable)[i] gives the i-th logical page table entry of "other" process.
         //Thus you will fill code inside the loop body of  for (int i = 0; i < numPages; i++) {  }
+        pageTable = new TranslationEntry[numPages];
+        for (int i = 0; i < numPages; i++) {
+            pageTable[i].virtualPage = (other->pageTable)[i].virtualPage;
+            pageTable[i].physicalPage = memoryManager->getPage();
+            pageTable[i].valid = (other->pageTable)[i].valid;
+            pageTable[i].use = (other->pageTable)[i].use;
+            pageTable[i].dirty = (other->pageTable)[i].dirty;
+            pageTable[i].readOnly = (other->pageTable)[i].readOnly;
+        }
 
 
         memoryManager->lock->Release();
@@ -178,6 +186,12 @@ AddrSpace::AddrSpace(const AddrSpace* other, PCB* newpcb) {
         //To get the physical addres (by byte) of the other process,
         //you can use (other->pageTable)[i].physicalPage * PageSize.
         //Then you can use bzero() to clean up and  use , bcopy() to complete the copy.
+        for (int i = 0; i < numPages; i++) {
+            int otherphysAddr = (other->pageTable)[i].physicalPage * PageSize;
+            int physAddr = pageTable[i].physicalPage * PageSize;
+            bzero(&(machine->mainMemory[physAddr]), PageSize);
+            bcopy(&(machine->mainMemory[otherphysAddr]), &(machine->mainMemory[physAddr]), PageSize);
+        }
 
         machineLock->Release();
     }

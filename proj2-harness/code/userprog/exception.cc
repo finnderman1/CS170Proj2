@@ -292,6 +292,7 @@ void exitImpl() {
 
     //BEGIN HINTS 
     //Set the exit status in the PCB of this process using  currentThread->space->getPCB() 
+    currentThread->space->getPCB()->status = P_BAD;
     //Also let other processes  know this process  exits through  processManager. 
     //See pcb.cc on how to get the exit code and see processmanager.cc on the above notification.
     //END HINTS
@@ -319,8 +320,14 @@ int joinImpl() {
 
    // BEGIN HINTS 
    // If the other process has  already exited, then just return its status
+   if(processManager->getStatus(otherPID) == P_BAD)
+   {
+       return processManager->getStatus(otherPID);
+   }
    // Use proessManager to wait for the completion of  otherPID.
+   processManager->join(otherPID);
    // Change the status of this process  in its PCB as P_RUNNING.
+   currentThread->space->getPCB()->status = P_RUNNING;
    // END HINTS
    //
     
@@ -483,7 +490,9 @@ int openImpl(char* filename) {
    //BEGIN HINTS 
    //Set up this UserOpenFile data structure
    // currUserFile.indeInSysOpenFileList should point to the index from openFileManager.
+   currUserFile.indexInSysOpenFileList = index; //this needs to be confirmed
    // currUserFile.currOffsetInFile is the offset position of the current file openned
+   currUserFile.currOffsetInFile = 0; // This also needs to be checked.
    // END HINTS
    // See useropenfile.h and pcb.cc on UserOpenFile class and its methods.
    // See sysopenfile.h and openfilemanager.cc for SysOpenFile class and its methods.
@@ -572,6 +581,7 @@ void writeImpl() {
         //Use SysOpenFile->file's writeAt() to write out the above buffer with size listed.
         currSysFile->file->WriteAt(buffer, size, 0);
         //Increment the current offset  by the actual number of bytes written.
+        userFile->currOffsetInFile = userFile->currOffsetInFile + size;
         //END HINTS 
        // See useropenfile.h and pcb.cc on UserOpenFile class and its methods.
        // See sysopenfile.h and openfilemanager.cc for SysOpenFile class and its methods.
@@ -612,8 +622,11 @@ int readImpl() {
 
         //BEGIN HINTS
         //Now from openFileManger, find the SystemOpenFile data structure for this userFile.
+        SysOpenFile* currSysFile = openFileManager->getFile(fileID);
         //Use ReadAt() to read the file at selected offset to this system buffer buffer[]
+        currSysFile->file->ReadAt(buffer, size, 0);
         // Adust the offset in userFile to reflect my current position.
+        userFile->currOffsetInFile = userFile->currOffsetInFile + size;
         // The above few lines of code are very similar to ones in writeImpl()
         // END HINTS 
         // See useropenfile.h and pcb.cc on UserOpenFile class and its methods.
@@ -646,8 +659,11 @@ void closeImpl() {
     } else {
        // BEGIN HINTS
        // Use openFileManager's getFile method to get a pointer to the system-wide SysOpenFile  data structure
+       SysOpenFile* currSysFile = openFileManager->getFile(fileID);
        // Call the close method in SysOpenFile
+       currSysFile->closedBySingleProcess();
        // Remove the file  in the open file list of this process PCB using PCB::removeFILE().
+       currentThread->space->getPCB()->removeFile(fileID);
        // END HINTS
        // See useropenfile.h and pcb.cc on UserOpenFile class and its methods.
        // See sysopenfile.h and openfilemanager.cc for SysOpenFile class and its methods.

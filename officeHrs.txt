@@ -1,0 +1,6 @@
+Questions for office hours:
+1. Error with the fork command only running once.
+2. Confused on how to implement broadcast.
+3. Check on cursor offset in openImpl
+4. Check the bcopy in addr...
+5.
