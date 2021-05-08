@@ -178,19 +178,19 @@ int forkImpl() {
     // Use processManager to get a new PID. 
     newPID = processManager->getPID();
     // Construct new PCB. See pcb.cc on how to create a new PCB.
-    PCB* newpcb = new PCB(newPID, currPID);
     // Set the new  process as P_RUNNING 
-    newpcb->status = P_RUNNING;
     // Associate the new user process with this childThread
-    newpcb->process = childThread;
     // Add this newly created process to processManager using addProcess.
     // END  HINTS
     if (newPID == -1) {
           fprintf(stderr, "Process %d is unable to fork a new process\n", currPID);
           return -1;
     }
-    
-   
+    PCB* newpcb = new PCB(newPID, currPID);
+    newpcb->status = P_RUNNING;
+    newpcb->process = childThread;
+    processManager->addProcess(newpcb, newPID);
+
   
     // BEGIN HINTS
     // Make a copy of the address space using AddrSpace::AddrSpace()
