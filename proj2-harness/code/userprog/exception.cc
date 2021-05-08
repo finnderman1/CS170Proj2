@@ -659,7 +659,7 @@ void closeImpl() {
     } else {
        // BEGIN HINTS
        // Use openFileManager's getFile method to get a pointer to the system-wide SysOpenFile  data structure
-       SysOpenFile* currSysFile = openFileManager->getFile(fileID);
+       SysOpenFile* currSysFile = openFileManager->getFile(userFile->indexInSysOpenFileList);
        // Call the close method in SysOpenFile
        currSysFile->closedBySingleProcess();
        // Remove the file  in the open file list of this process PCB using PCB::removeFILE().
